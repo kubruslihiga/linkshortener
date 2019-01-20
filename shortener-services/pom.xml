@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>shortener-services</artifactId>
+	<packaging>${packaging.type}</packaging>
+
+	<name>shortener-services</name>
+	<description>shortener-services</description>
+
+	<parent>
+		<groupId>br.mauricio.shortener</groupId>
+		<artifactId>shortener</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<docker.image.prefix>springio</docker.image.prefix>
+		<packaging.type>jar</packaging.type>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>br.mauricio.shortener</groupId>
+			<artifactId>shortener-entities</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	            <filtering>true</filtering>
+	            <excludes>
+	                <exclude>*.jks</exclude>
+	                <exclude>*.md</exclude>
+	                <exclude>*.old</exclude>
+	            </excludes>
+	        </resource>
+	        <resource>
+	            <directory>src/main/env</directory>
+	            <filtering>false</filtering>
+	        </resource>
+	    </resources>
+	    <plugins>
+		    <plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<addResources>true</addResources>
+       	</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+					    <groupId>com.spotify</groupId>
+					    <artifactId>dockerfile-maven-plugin</artifactId>
+					    <version>1.4.2</version>
+				        <configuration>
+				            <repository>springio/${project.artifactId}-app</repository>
+				        </configuration>
+				        <executions>
+							<execution>
+								<id>default</id>
+								<phase>install</phase>
+								<goals>
+									<goal>build</goal>
+									<!-- goal>push</goal -->
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

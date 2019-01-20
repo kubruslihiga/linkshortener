@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  mongodb:
+    image: tutum/mongodb:latest
+    ports:
+    - 27017:27017
+    - 28017:28017
+    restart: 'always'
+    environment:
+    - AUTH=no
+  app:
+    build: ./shortener-services
+    ports:
+    - 8080:8080
+    network_mode: 'host'
+    restart: 'always'
+    depends_on:
+    - "mongodb"
